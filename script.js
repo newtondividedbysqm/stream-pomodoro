@@ -9,6 +9,8 @@ const lengths = {
 const breakSound = new Audio('sounds/break.mp3');
 const workSound = new Audio('sounds/work.mp3');
 
+let numberOfSessions = 1;
+
 let mode;
 let interval;
 let length;
@@ -81,6 +83,7 @@ function updateClock() {
     clearInterval(interval);
     interval = null;
     if (mode === 'pomodoro') {
+      numberOfSessions += 1;
       breakSound.play();
     } else {
       workSound.play();
@@ -94,7 +97,7 @@ function updateClock() {
 
   document.getElementById('clock').textContent = time;
 
-  const text = mode === 'pomodoro' ? 'FOCUS TIME' : 'BREAK TIME';
+  const text = mode === 'pomodoro' ? `FOCUS TIME #${numberOfSessions}` : 'BREAK TIME';
   document.title = `${time} - ${text}`;
   document.getElementById('text').textContent = text;
 
