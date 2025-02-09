@@ -82,12 +82,24 @@ function updateClock() {
     remainingTime = 0;
     clearInterval(interval);
     interval = null;
+    
+    // Auto-switch to next mode
     if (mode === 'pomodoro') {
       numberOfSessions += 1;
       breakSound.play();
+      mode = 'shortBreak';
     } else {
       workSound.play();
+      mode = 'pomodoro';
     }
+    
+    // Update UI for new mode
+    document.querySelectorAll('button[data-mode]').forEach(e => e.classList.remove('active'));
+    document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+    
+    // Start new timer
+    length = lengths[mode];
+    startTimer();
   }
 
   const remainingSeconds = Math.round(remainingTime);
@@ -101,8 +113,7 @@ function updateClock() {
   document.title = `${time} - ${text}`;
   document.getElementById('text').textContent = text;
 
-  const progress = length == 0 ? 1 : ((length - remainingTime) / length)
-
+  const progress = length == 0 ? 1 : ((length - remainingTime) / length);
   document.getElementById('progress-value').style.width = progress * 100 + "vw";
 }
 
