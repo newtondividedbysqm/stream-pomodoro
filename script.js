@@ -85,7 +85,6 @@ function updateClock() {
     
     // Auto-switch to next mode
     if (mode === 'pomodoro') {
-      numberOfSessions += 1;
       breakSound.play();
       mode = 'shortBreak';
     } else {
@@ -126,6 +125,9 @@ function runTimer() {
 }
 
 function startTimer() {
+  if (mode === 'pomodoro') {
+    numberOfSessions += 1;
+  }
   endTime = Date.now() + length * 1000;
   runTimer();
 }
