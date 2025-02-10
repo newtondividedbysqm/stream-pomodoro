@@ -28,8 +28,13 @@ body {
 }
 
 #text {
-  font-size: 10vw;
-  line-height: 10vw;
+  font-size: 7vw;
+  line-height: 7vw;
+}
+
+#subtext {
+  font-size: 3vw;
+  line-height: 3vw;
 }
 
 hr {

@@ -9,8 +9,9 @@ const lengths = {
 const breakSound = new Audio('sounds/break.mp3');
 const workSound = new Audio('sounds/work.mp3');
 
-let numberOfSessions = 1;
-
+let numberOfSessions = 0;
+let maxSessions = Number(urlParams.get('maxSessions')) || 2;
+let omitSessions = urlParams.has('omitSessions');
 let mode;
 let interval;
 let length;
@@ -95,10 +96,13 @@ function updateClock() {
     // Update UI for new mode
     document.querySelectorAll('button[data-mode]').forEach(e => e.classList.remove('active'));
     document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
-    
-    // Start new timer
-    length = lengths[mode];
-    startTimer();
+
+    // Start new timer when not at max sessions, but will still run a last break session
+    // TODO: after the last break the text still changes to Focus Time instead of End of Session
+    if (maxSessions === 0 || numberOfSessions < maxSessions || mode === 'shortBreak') {
+      length = lengths[mode];
+      startTimer();
+    }
   }
 
   const remainingSeconds = Math.round(remainingTime);
@@ -108,9 +112,11 @@ function updateClock() {
 
   document.getElementById('clock').textContent = time;
 
-  const text = mode === 'pomodoro' ? `FOCUS TIME #${numberOfSessions}` : 'BREAK TIME';
+  const text = mode === 'pomodoro' ? 'FOCUS TIME' : 'BREAK TIME';
+  const subtext = maxSessions > 0 ? `Pomo ${numberOfSessions}/${maxSessions}` : `Pomo #${numberOfSessions}`;
   document.title = `${time} - ${text}`;
   document.getElementById('text').textContent = text;
+  document.getElementById('subtext').textContent = omitSessions ? '' : subtext;
 
   const progress = length == 0 ? 1 : ((length - remainingTime) / length);
   document.getElementById('progress-value').style.width = progress * 100 + "vw";
