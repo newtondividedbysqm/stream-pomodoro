@@ -25,7 +25,7 @@ document.querySelector('#mode-buttons').addEventListener('click', function (even
 
   mode = newMode;
 
-  document.querySelectorAll('button[data-mode]').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('button[data-mode]').forEach((e) => e.classList.remove('active'));
   document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
 
   length = lengths[mode];
@@ -54,7 +54,7 @@ document.querySelector('#adjust-buttons').addEventListener('click', function (ev
   const { action } = event.target.dataset;
 
   switch (action) {
-    case "plus":
+    case 'plus':
       if (interval) {
         length += 60;
         endTime += 60000;
@@ -64,7 +64,7 @@ document.querySelector('#adjust-buttons').addEventListener('click', function (ev
         startTimer();
       }
       break;
-    case "minus":
+    case 'minus':
       if (interval) {
         length -= 60;
         endTime -= 60000;
@@ -111,7 +111,9 @@ function updateClock() {
   }
 
   const remainingSeconds = Math.round(remainingTime);
-  const minutes = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
+  const minutes = Math.floor(remainingSeconds / 60)
+    .toString()
+    .padStart(2, '0');
   const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
   const time = `${minutes}:${seconds}`;
 
@@ -123,8 +125,8 @@ function updateClock() {
   document.getElementById('text').textContent = text;
   document.getElementById('subtext').textContent = omitSessions ? '' : subtext;
 
-  const progress = length == 0 ? 1 : ((length - remainingTime) / length);
-  document.getElementById('progress-value').style.width = progress * 100 + "vw";
+  const progress = length == 0 ? 1 : (length - remainingTime) / length;
+  document.getElementById('progress-value').style.width = progress * 100 + 'vw';
 }
 
 function runTimer() {
