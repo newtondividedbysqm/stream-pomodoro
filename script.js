@@ -10,7 +10,7 @@ const breakSound = new Audio('sounds/break.mp3');
 const workSound = new Audio('sounds/work.mp3');
 
 let numberOfSessions = 0;
-let maxSessions = Number(urlParams.get('maxSessions')) || 2;
+let maxSessions = Number(urlParams.get('maxSessions')) || 0;
 let omitSessions = urlParams.has('omitSessions');
 let mode;
 let interval;
