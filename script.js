@@ -83,26 +83,31 @@ function updateClock() {
     remainingTime = 0;
     clearInterval(interval);
     interval = null;
-    
-    // Auto-switch to next mode
+
+    // we always play the break sound at the end of a pomodoro session
+    // work sound is only played when we auto switch to a new pomodoro session and thus is handled by the auto switch logic
     if (mode === 'pomodoro') {
       breakSound.play();
-      mode = 'shortBreak';
-    } else {
-      workSound.play();
-      mode = 'pomodoro';
     }
-    
-    // Update UI for new mode
-    document.querySelectorAll('button[data-mode]').forEach(e => e.classList.remove('active'));
-    document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
 
-    // Start new timer when not at max sessions, but will still run a last break session
-    // TODO: after the last break the text still changes to Focus Time instead of End of Session
-    if (maxSessions === 0 || numberOfSessions < maxSessions || mode === 'shortBreak') {
+    // auto switch to next mode when...
+    // - omit sessions or max sessions 0 we switch (endlessly)
+    // - when we haven't reached max sessions yet
+    // if none of the above applies we are at or above the max session and thus switch only from pomodoro to break, this allows for one last break at the end (basically for streamer to wind down, say goodbye etc.)
+    // note: this way we also allow to manually start more pomo sessions above max sessions whithout breaking the auto switch into break mode.
+    if (omitSessions || maxSessions === 0 || numberOfSessions < maxSessions) {
+      workSound.play();
+      mode = mode !== 'pomodoro' ? 'pomodoro' : 'shortBreak';
+      length = lengths[mode];
+      startTimer();
+    } else if (mode === 'pomodoro') {
+      mode = 'shortBreak';
       length = lengths[mode];
       startTimer();
     }
+    // Update UI for new mode
+    document.querySelectorAll('button[data-mode]').forEach((e) => e.classList.remove('active'));
+    document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
   }
 
   const remainingSeconds = Math.round(remainingTime);
